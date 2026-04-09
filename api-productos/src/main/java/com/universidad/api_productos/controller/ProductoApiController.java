@@ -26,12 +26,12 @@ public class ProductoApiController {
         return ResponseEntity.ok(servicio.obtenerTodos());
     }
 
-    // GET /api/productos/{id} → 200 OK + objeto JSON, o 404 Not Found
+    // GET /api/productos/{id} → 200 OK + objeto JSON, o 404 con mensaje de error
     @GetMapping("/{id}")
     public ResponseEntity<Producto> buscar(@PathVariable Long id) {
-        return servicio.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Producto producto = servicio.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + id));
+        return ResponseEntity.ok(producto);
     }
 
     // POST /api/productos → 201 Created + objeto creado
